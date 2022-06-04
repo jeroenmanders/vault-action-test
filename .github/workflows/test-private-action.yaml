@@ -30,7 +30,7 @@ jobs:
         run: |-
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault secrets enable -version=1 -path my-secret kv 
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/test altSecret=altValue
-          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/nested/test otherAltSecret=altValue
+          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/nested/test otherAltSecret=otherAltSecretValue
 
       - name: Test Vault Action (default KV V1)
         id: kv-secrets
