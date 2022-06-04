@@ -29,8 +29,8 @@ jobs:
       - name: Write some secrets
         run: |-
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault secrets enable -version=1 -path test-backend kv 
-          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write test-backend/data/test key=value 
-          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write test-backend/data/nested/test key2=value2
+          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write test-backend/data/test secret=value1 
+          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write test-backend/data/nested/test otherSecret=value2
 
       - name: Test Vault Action (default KV V2)
         uses: ./vault-action/.github/actions/vault
