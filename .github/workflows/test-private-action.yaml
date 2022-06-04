@@ -31,11 +31,9 @@ jobs:
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault secrets enable -version=1 -path my-secret kv 
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/test altSecret=altValue
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/nested/test otherAltSecret=altValue
-          
-          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write cubbyhole/test foo=fooValue
-          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write cubbyhole/test zip=zipValue
 
       - name: Test Vault Action (default KV V1)
+        id: kv-secrets
         uses: ./vault-action/.github/actions/vault
         with:
           url: http://localhost:8200
@@ -44,15 +42,6 @@ jobs:
             my-secret/test altSecret ;
             my-secret/test altSecret | NAMED_ALTSECRET ;
             my-secret/nested/test otherAltSecret ;
-
-      - name: Test Vault Action (cubbyhole)
-        uses: ./vault-action/.github/actions/vault
-        with:
-          url: http://localhost:8200
-          token: testtoken
-          secrets: |
-            /cubbyhole/test foo ;
-            /cubbyhole/test zip | NAMED_CUBBYSECRET ;
 
       - name: Print Vault Action Outputs
         run: |-
