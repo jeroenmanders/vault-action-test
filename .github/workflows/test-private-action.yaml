@@ -26,6 +26,10 @@ jobs:
       - name: Run docker-compose
         run: docker-compose up -d vault
 
+      - name: Write some secrets
+        run: |-
+          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault kv put secret/data/test key=value && vault kv put secret/data/nested/test key2=value2
+
       - name: Test Vault Action (default KV V2)
         uses: ./vault-action/.github/actions/vault
         id: kv-secrets
