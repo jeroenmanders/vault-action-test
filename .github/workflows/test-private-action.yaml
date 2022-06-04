@@ -28,8 +28,9 @@ jobs:
 
       - name: Write some secrets
         run: |-
-          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault kv put secret/data/test key=value 
-          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault kv put secret/data/nested/test key2=value2
+          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault secrets enable -version=1 -path test-backend kv 
+          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write test-backend/data/test key=value 
+          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write test-backend/data/nested/test key2=value2
 
       - name: Test Vault Action (default KV V2)
         uses: ./vault-action/.github/actions/vault
@@ -38,9 +39,9 @@ jobs:
           url: http://localhost:8200
           token: testtoken
           secrets: |
-            secret/data/test secret ;
-            secret/data/test secret | NAMED_SECRET ;
-            secret/data/nested/test otherSecret ;
+            test-backend/data/test secret ;
+            test-backend/data/test secret | NAMED_SECRET ;
+            test-backend/data/nested/test otherSecret ;
 
       - name: Test Vault Action (default KV V1)
         uses: ./vault-action/.github/actions/vault
