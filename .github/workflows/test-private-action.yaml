@@ -27,7 +27,7 @@ jobs:
         run: docker-compose up -d vault
 
       - name: Test Vault Action (default KV V2)
-        uses: ./.github/actions/vault
+        uses: ./vault-action/.github/actions/vault
         id: kv-secrets
         with:
           url: http://localhost:8200
@@ -38,7 +38,7 @@ jobs:
             secret/data/nested/test otherSecret ;
 
       - name: Test Vault Action (default KV V1)
-        uses: ./.github/actions/vault
+        uses: ./vault-action/.github/actions/vault
         with:
           url: http://localhost:8200
           token: testtoken
@@ -48,7 +48,7 @@ jobs:
             my-secret/nested/test otherAltSecret ;
 
       - name: Test Vault Action (cubbyhole)
-        uses: ./.github/actions/vault
+        uses: ./vault-action/.github/actions/vault
         with:
           url: http://localhost:8200
           token: testtoken
