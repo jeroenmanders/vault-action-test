@@ -1,0 +1,62 @@
+name: Test
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '*'
+    paths:
+      - '**'
+      -
+jobs:
+
+  # The Vault-repository is not actually private, but we clone it as if it was (without a GitHub token since it's public)
+
+  integrationOSS:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout vault-action
+        uses: actions/checkout@v3
+        with:
+          repository: jeroenmanders/vault-action
+          ref: dev
+          path: vault-action
+
+      - name: Run docker-compose
+        run: docker-compose up -d vault
+
+      - name: Test Vault Action (default KV V2)
+        uses: ./.github/actions/vault
+        id: kv-secrets
+        with:
+          url: http://localhost:8200
+          token: testtoken
+          secrets: |
+            secret/data/test secret ;
+            secret/data/test secret | NAMED_SECRET ;
+            secret/data/nested/test otherSecret ;
+
+      - name: Test Vault Action (default KV V1)
+        uses: ./.github/actions/vault
+        with:
+          url: http://localhost:8200
+          token: testtoken
+          secrets: |
+            my-secret/test altSecret ;
+            my-secret/test altSecret | NAMED_ALTSECRET ;
+            my-secret/nested/test otherAltSecret ;
+
+      - name: Test Vault Action (cubbyhole)
+        uses: ./.github/actions/vault
+        with:
+          url: http://localhost:8200
+          token: testtoken
+          secrets: |
+            /cubbyhole/test foo ;
+            /cubbyhole/test zip | NAMED_CUBBYSECRET ;
+
+      - name: Print Vault Action Outputs
+        run: |-
+          echo "otherSecret: $OTHER_SECRET_OUTPUT"
+        env:
+          OTHER_SECRET_OUTPUT: ${{ steps.kv-secrets.outputs.otherSecret }}
