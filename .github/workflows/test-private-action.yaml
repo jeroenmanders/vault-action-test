@@ -29,7 +29,7 @@ jobs:
       - name: Write some secrets
         run: |-
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault secrets enable -version=1 -path my-secret kv 
-          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/test altSecret=altValue
+          docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/test altSecret=altValue field2=value2 field3=value3
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/nested/test otherAltSecret=otherAltSecretValue
 
       - name: Test Vault Action (default KV V1)
@@ -44,8 +44,23 @@ jobs:
             my-secret/nested/test otherAltSecret ;
           skipMasks: otherAltSecret,blabla
 
+      - name: Test Vault wildcard Action (default KV V1)
+        id: kv-wildcard-secrets
+        uses: ./vault-action/.github/actions/vault
+        with:
+          url: http://localhost:8200
+          token: testtoken
+          secrets: |
+            my-secret/test * ;
+          skipMasks: otherAltSecret,field1
+
       - name: Print Vault Action Outputs
         run: |-
           echo "otherAltSecret: ${{ steps.kv-secrets.outputs.otherAltSecret }}"
           echo "NAMED_ALTSECRET: ${{ steps.kv-secrets.outputs.NAMED_ALTSECRET }}"
           echo "altSecret: ${{ steps.kv-secrets.outputs.altSecret }}"
+          
+          echo "--- Wildcard secrets: ----"
+          echo "otherAltSecret: ${{ steps.kv-wildcard-secrets.outputs.otherAltSecret }}"
+          echo "otherAltSecret: ${{ steps.kv-wildcard-secrets.outputs.field1 }}"
+          echo "otherAltSecret: ${{ steps.kv-wildcard-secrets.outputs.field2 }}"
