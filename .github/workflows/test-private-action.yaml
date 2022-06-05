@@ -32,7 +32,6 @@ jobs:
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/test altSecret=altValue field2=value2 field3=value3
           docker run --network vault-action-test_default -e VAULT_ADDR="http://vault:8200"  --entrypoint "" --rm -e VAULT_TOKEN="testtoken" vault:latest vault write my-secret/nested/test otherAltSecret=otherAltSecretValue
 
-
       - name: Test Vault Action (default KV V1)
         id: kv-secrets
         uses: ./vault-action/.github/actions/vault
@@ -62,6 +61,6 @@ jobs:
           echo "altSecret: ${{ steps.kv-secrets.outputs.altSecret }}"
           
           echo "--- Wildcard secrets: ----"
-          echo "otherAltSecret: ${{ steps.kv-wildcard-secrets.outputs.otherAltSecret }}"
-          echo "otherAltSecret: ${{ steps.kv-wildcard-secrets.outputs.field1 }}"
-          echo "otherAltSecret: ${{ steps.kv-wildcard-secrets.outputs.field2 }}"
+          echo "otherAltSecret: ${{ steps.kv-wildcard-secrets.outputs.OTHERALTSECRET }}"
+          echo "otherAltSecret: ${{ steps.kv-wildcard-secrets.outputs.FIELD1 }}"
+          echo "otherAltSecret: ${{ steps.kv-wildcard-secrets.outputs.FIELD2 }}"
