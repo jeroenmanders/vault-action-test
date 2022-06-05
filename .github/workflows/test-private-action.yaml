@@ -52,7 +52,7 @@ jobs:
           token: testtoken
           secrets: |
             my-secret/test * ;
-          skipMasks: otherAltSecret,field1
+          skipMasks: altSecret,FIELD2,field3
 
       - name: Print Vault Action Outputs
         run: |-
@@ -62,5 +62,5 @@ jobs:
           
           echo "--- Wildcard secrets: ----"
           echo "OTHERALTSECRET: ${{ steps.kv-wildcard-secrets.outputs.OTHERALTSECRET }}"
-          echo "FIELD1: ${{ steps.kv-wildcard-secrets.outputs.FIELD1 }}"
           echo "FIELD2: ${{ steps.kv-wildcard-secrets.outputs.FIELD2 }}"
+          echo "FIELD3: ${{ steps.kv-wildcard-secrets.outputs.FIELD3 }}"
