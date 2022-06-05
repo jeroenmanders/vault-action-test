@@ -51,7 +51,7 @@ jobs:
           url: http://localhost:8200
           token: testtoken
           secrets: |
-            my-secret/test * | pre;
+            my-secret/test * | pre_;
           skipMasks: pre_altSecret,pre_field3
 
       - name: Print Vault Action Outputs
