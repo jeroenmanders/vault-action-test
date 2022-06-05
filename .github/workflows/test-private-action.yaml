@@ -51,8 +51,8 @@ jobs:
           url: http://localhost:8200
           token: testtoken
           secrets: |
-            my-secret/test * ;
-          skipMasks: altSecret,field3
+            my-secret/test * | pre;
+          skipMasks: pre_altSecret,pre_field3
 
       - name: Print Vault Action Outputs
         run: |-
@@ -61,6 +61,6 @@ jobs:
           echo "altSecret: ${{ steps.kv-secrets.outputs.altSecret }}"
           
           echo "--- Wildcard secrets: ----"
-          echo "ALTSECRET: ${{ steps.kv-wildcard-secrets.outputs.ALTSECRET }}"
-          echo "FIELD2: ${{ steps.kv-wildcard-secrets.outputs.FIELD2 }}"
-          echo "FIELD3: ${{ steps.kv-wildcard-secrets.outputs.FIELD3 }}"
+          echo "ALTSECRET: ${{ steps.kv-wildcard-secrets.outputs.PRE_ALTSECRET }}"
+          echo "FIELD2: ${{ steps.kv-wildcard-secrets.outputs.PRE_FIELD2 }}"
+          echo "FIELD3: ${{ steps.kv-wildcard-secrets.outputs.PRE_FIELD3 }}"
