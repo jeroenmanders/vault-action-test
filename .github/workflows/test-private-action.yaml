@@ -62,5 +62,5 @@ jobs:
           
           echo "--- Wildcard secrets: ----"
           echo "ALTSECRET: ${{ steps.kv-wildcard-secrets.outputs.pre_altsecret }}"
-          echo "FIELD2: ${{ steps.kv-wildcard-secrets.outputs.field2 }}"
+          echo "FIELD2: ${{ steps.kv-wildcard-secrets.outputs.pre_field2 }}"
           echo "FIELD3: ${{ steps.kv-wildcard-secrets.outputs.pre_field3 }}"
